@@ -9,6 +9,10 @@
  * @subpackage points-and-rewards-for-wooCommerce/admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -90,6 +94,7 @@ class Points_Rewards_For_WooCommerce_Dummy_Settings {
 		add_action( 'wps_wpr_additional_coupon_settings', array( $this, 'wps_wpr_additionals_dummy_coupon_settings' ), 10, 2 );
 		add_action( 'wps_wpr_add_campaign_general_section', array( $this, 'wps_wpr_add_campaigns_general_section_dummy_html' ), 10 );
 		add_action( 'wps_wpr_add_campaign_additional_html', array( $this, 'wps_wpr_show_footer_dummy_content_dynamically' ), 10, 1 );
+		add_filter( 'wps_wpr_add_membership_settings', array( $this, 'wps_wpr_setting_pro_to_automate_membership' ), 10, 1 );
 	}
 
 	/**
@@ -504,6 +509,41 @@ class Points_Rewards_For_WooCommerce_Dummy_Settings {
 				'desc_tip'          => __( 'The Number of Customers To Be Listed During Ranking', 'points-and-rewards-for-woocommerce' ),
 			),
 			array(
+				'title'    => __( 'First Rank Bonus Rewards', 'points-and-rewards-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'desc'     => __( 'Turn on this option to grant bonus points to users who achieve the first rank.', 'points-and-rewards-for-woocommerce' ),
+				'id'       => 'wps_wpr_dummy_enable_to_rewards_extra_points_first_rank',
+				'desc_tip' => __( 'Enable this option to apply additional reward points to users occupying the first-rank position.', 'points-and-rewards-for-woocommerce' ),
+				'default'  => 0,
+				'class'    => 'wps_wpr_pro_plugin_settings',
+			),
+			array(
+				'title' => __( 'Points Assignment Type', 'points-and-rewards-for-woocommerce' ),
+				'id' => 'wps_wpr_dummy_rank_points_assignment_type',
+				'class' => 'wps_wgm_new_woo_ver_style_select wps_wpr_pro_plugin_settings',
+				'type' => 'singleSelectDropDownWithKeyvalue',
+				'desc_tip' => __( 'Choose the interval at which points will be awarded, either weekly or monthly', 'points-and-rewards-for-woocommerce' ),
+				'custom_attribute' => array(
+					array(
+						'id' => 'week',
+						'name' => __( 'Weekly', 'points-and-rewards-for-woocommerce' ),
+					),
+					array(
+						'id' => 'month',
+						'name' => __( 'Monthly', 'points-and-rewards-for-woocommerce' ),
+					),
+				),
+			),
+			array(
+				'title'             => __( 'Enter Points', 'points-and-rewards-for-woocommerce' ),
+				'type'              => 'number',
+				'default'           => 1,
+				'id'                => 'wps_wpr_dummy_rank_holder_points',
+				'custom_attributes' => array( 'min' => '"1"' ),
+				'class'             => 'input-text wps_wpr_new_woo_ver_style_text wps_wpr_pro_plugin_settings',
+				'desc_tip'          => __( 'Entered points will be assigned to user based on the selected interval', 'points-and-rewards-for-woocommerce' ),
+			),
+			array(
 				'type' => 'sectionend',
 			),
 		);
@@ -674,7 +714,15 @@ class Points_Rewards_For_WooCommerce_Dummy_Settings {
 				'class'             => 'input-text wps_wpr_new_woo_ver_style_text wps_wpr_pro_plugin_settings',
 				'desc_tip'          => __( 'The Points That The Customers Will Get, Only on Their Birthday', 'points-and-rewards-for-woocommerce' ),
 			),
-
+			array(
+				'title'             => __( 'Birthday Month Points Multiplier', 'points-and-rewards-for-woocommerce' ),
+				'type'              => 'number',
+				'default'           => 1,
+				'id'                => 'wps_wpr_dummy_birth_day_multiplier',
+				'custom_attributes' => array( 'min' => '"1"' ),
+				'class'             => 'input-text wps_wpr_new_woo_ver_style_text wps_wpr_pro_plugin_settings',
+				'desc_tip'          => __( 'Apply a points multiplier to all orders placed during the user’s birthday month. The points earned will be multiplied based on the selected value (2X / 3X).', 'points-and-rewards-for-woocommerce' ),
+			),
 			array(
 				'type' => 'sectionend',
 			),
@@ -2591,7 +2639,7 @@ class Points_Rewards_For_WooCommerce_Dummy_Settings {
 			),
 		);
 
-		$general_settings  = $this->wps_dummy_insert_keys_value_pair( $general_settings, $my_new_inserted_array, 72 );
+		$general_settings  = $this->wps_dummy_insert_keys_value_pair( $general_settings, $my_new_inserted_array, 76 );
 		return $general_settings;
 	}
 
@@ -2661,5 +2709,45 @@ class Points_Rewards_For_WooCommerce_Dummy_Settings {
 			</div>
 		</article>
 		<?php
+	}
+
+	/**
+	 * Creating skeleton for membership automate and next level .
+	 *
+	 * @param  array $membership_html membership_html.
+	 * @return array
+	 */
+	public function wps_wpr_setting_pro_to_automate_membership( $membership_html ) {
+
+		$add_arr = array(
+			array(
+				'title'    => __( 'Enable to automate memberbship', 'points-and-rewards-for-woocommerce' ),
+				'id'       => 'wps_wpr_enable_dummy_automate_membership',
+				'type'     => 'checkbox',
+				'class'    => 'input-text wps_wpr_pro_plugin_settings',
+				'desc'     => __( 'Enable this setting to automatically assign membership based on the users points', 'points-and-rewards-for-woocommerce' ),
+				'desc_tip' => __( 'After enabling this setting, membership will be automatically assigned based on the users points', 'points-and-rewards-for-woocommerce' ),
+			),
+			array(
+				'title'    => __( 'Toggle to show the next membership level on Single Product page', 'points-and-rewards-for-woocommerce' ),
+				'type'     => 'checkbox',
+				'id'       => 'wps_wpr_show_next_dummy_membership_level',
+				'class'    => 'input-text wps_wpr_pro_plugin_settings',
+				'desc_tip' => __( 'Inform the user about the next membership level they can achieve.', 'points-and-rewards-for-woocommerce' ),
+				'default'  => 0,
+				'desc'     => __( 'Toggle this setting if you want to display the next membership level on Single Product page', 'points-and-rewards-for-woocommerce' ),
+			),
+			array(
+				'id'       => 'wps_wpr_mem_dummy_level_notice',
+				'title'    => __( 'Enter Message', 'points-and-rewards-for-woocommerce' ),
+				'type'     => 'text',
+				'desc_tip' => __( 'The message you enter will be displayed on the product and cart pages.', 'points-and-rewards-for-woocommerce' ),
+				'class'    => 'input-text wps_wpr_pro_plugin_settings',
+				'desc'     => __( ' Enter your message using the shortcodes [POINTS] for points and [LEVEL] for membership level. For example: ‘You have [POINTS] points left to reach [LEVEL] level.', 'points-and-rewards-for-woocommerce' ),
+			),
+		);
+
+		array_splice( $membership_html, 2, 0, $add_arr );
+		return $membership_html;
 	}
 }

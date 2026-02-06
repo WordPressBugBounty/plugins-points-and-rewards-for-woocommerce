@@ -9,6 +9,10 @@
  * @subpackage points-and-rewards-for-wooCommerce/public/partials
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $user_id    = get_current_user_id();
 $get_points = (int) get_user_meta( $user_id, 'wps_wpr_points', true );
 $my_role    = ! empty( get_user_meta( $user_id, 'membership_level', true ) ) ? get_user_meta( $user_id, 'membership_level', true ) : '';
@@ -359,6 +363,7 @@ $wps_per_currency_spent_points = isset( $coupon_settings['wps_wpr_coupon_convers
 		<span class="wps-p_mash-item wps-p_mash-i-claim"><?php esc_html_e( 'Claim', 'points-and-rewards-for-woocommerce' ); ?></span>
 		<span class="wps-p_mash-item wps-p_mash-i-referral wps-p_mash-i--active"><?php esc_html_e( 'Referral', 'points-and-rewards-for-woocommerce' ); ?></span>
 		<span class="wps-p_mash-item wps-p_mash-i-earn"><?php esc_html_e( 'Notices', 'points-and-rewards-for-woocommerce' ); ?></span>
+		<?php do_action( 'wps_par_extra_template_tab' ); ?>
 	</div>
 
 	<!-- Tab inside data -->
@@ -801,5 +806,6 @@ $wps_per_currency_spent_points = isset( $coupon_settings['wps_wpr_coupon_convers
 			do_action( 'wps_extend_point_tab_section', $user_id );
 			?>
 		</div>
+		<?php do_action( 'wps_par_extra_template_data' ); ?>
 	</div>
 </div>

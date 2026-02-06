@@ -9,6 +9,10 @@
  * @subpackage points-and-rewards-for-wooCommerce/admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -1975,11 +1979,12 @@ class Points_Rewards_For_WooCommerce_Admin {
 					$wps_wpr_payment_rewards_done = get_post_meta( $order_id, 'wps_wpr_payment_rewards_done', true );
 					if ( empty( $wps_wpr_payment_rewards_done ) ) {
 
-						$get_points              = get_user_meta( $user_id, 'wps_wpr_points', true );
-						$get_points              = ! empty( $get_points ) ? $get_points : 0;
-						$payment_rewards_details = get_user_meta( $user_id, 'points_details', true );
-						$payment_rewards_details = ! empty( $payment_rewards_details ) && is_array( $payment_rewards_details ) ? $payment_rewards_details : array();
-						$updated_points          = (int) $get_points + $wps_wpr_payment_method_rewards_points;
+						$get_points                            = get_user_meta( $user_id, 'wps_wpr_points', true );
+						$get_points                            = ! empty( $get_points ) ? $get_points : 0;
+						$payment_rewards_details               = get_user_meta( $user_id, 'points_details', true );
+						$payment_rewards_details               = ! empty( $payment_rewards_details ) && is_array( $payment_rewards_details ) ? $payment_rewards_details : array();
+						$wps_wpr_payment_method_rewards_points = apply_filters( 'wps_birthday_multiplier_points', $wps_wpr_payment_method_rewards_points, $user_id );
+						$updated_points                        = (int) $get_points + $wps_wpr_payment_method_rewards_points;
 
 						if ( isset( $payment_rewards_details['payment_methods_points'] ) && ! empty( $payment_rewards_details['payment_methods_points'] ) ) {
 
@@ -2181,7 +2186,32 @@ class Points_Rewards_For_WooCommerce_Admin {
 	 * @return void
 	 */
 	public function wps_large_scv_import() {
+
 		check_ajax_referer( 'wps-wpr-verify-nonce', 'wps_nonce' );
+
+		// Authentication check.
+		if ( ! is_user_logged_in() ) {
+
+			wp_send_json(
+				array(
+					'result' => false,
+					'msg'    => esc_html__( 'Authentication required', 'points-and-rewards-for-woocommerce' ),
+				)
+			);
+			wp_die();
+		}
+
+		// Authorization check.
+		if ( ! current_user_can( 'manage_options' ) ) {
+
+			wp_send_json(
+				array(
+					'result' => false,
+					'msg'    => esc_html__( 'Access denied', 'points-and-rewards-for-woocommerce' ),
+				)
+			);
+			wp_die();
+		}
 
 		$start          = isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( intval( $_POST['start'] ) ) ) : 0;
 		$chunk_size     = 1000; // Adjust chunk size as needed.
