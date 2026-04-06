@@ -57,7 +57,7 @@ class Points_Rewards_For_WooCommerce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function wps_wpr_public_enqueue_styles() {
 
 		// enqueue css for points tab design.
 		wp_enqueue_style( $this->plugin_name, WPS_RWPR_DIR_URL . 'public/css/points-rewards-for-woocommerce-public.min.css', array(), $this->version, 'all' );
@@ -78,7 +78,7 @@ class Points_Rewards_For_WooCommerce_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function wps_wpr_public_enqueue_scripts() {
 
 		// get cart restriction message.
 		$wps_wpr_other_settings           = get_option( 'wps_wpr_other_settings' );
@@ -1277,7 +1277,7 @@ class Points_Rewards_For_WooCommerce_Public {
 				$order_total            = apply_filters( 'wps_wpr_convert_same_currency_base_price', $order_total, $order_id );
 				$order_total            = str_replace( wc_get_price_decimal_separator(), '.', strval( $order_total ) );
 				$item_conversion_id_set = wps_wpr_hpos_get_meta_data( $order_id, "$order_id#item_conversion_id", true );
-				if ( empty( $item_conversion_id_set ) && $order_total > 0 ) {
+				if ( 'set' != $item_conversion_id_set && $order_total > 0 ) {
 
 					$user_id = $order->get_user_id();
 					$get_points = (int) get_user_meta( $user_id, 'wps_wpr_points', true );
@@ -2030,6 +2030,19 @@ class Points_Rewards_For_WooCommerce_Public {
 				$get_points = $get_points;
 			}
 
+			// if cart subtotal is less than points value then apply fee on cart subtotal only.
+			if ( isset( WC()->cart ) ) {
+
+				$cart_subtotals = ! empty( WC()->cart->get_subtotal() ) && WC()->cart->get_subtotal() > 0 ? WC()->cart->get_subtotal() : 0;
+				if ( $wps_cart_points > $cart_subtotals ) {
+
+					$wps_cart_points = $cart_subtotals;
+				} else {
+
+					$wps_cart_points = $wps_cart_points;
+				}
+			}
+
 			// deduct points if Points Discount is applied.
 			$wps_wpr_check_points_discount_applied_amount = ! empty( get_option( 'wps_wpr_check_points_discount_applied_amount' ) ) ? get_option( 'wps_wpr_check_points_discount_applied_amount' ) : 0;
 			$get_points                                   = (int) $get_points - $wps_wpr_check_points_discount_applied_amount;
@@ -2568,7 +2581,7 @@ class Points_Rewards_For_WooCommerce_Public {
 		if ( 1 == $wps_wpr_custom_points_on_checkout ) {
 			if ( 'checkout/form-coupon.php' == $template_name ) {
 
-				return WPS_RWPR_DIR_PATH . 'public/woocommerce/checkout/form-coupon.php';
+				return WPS_RWPR_DIR_PATH . 'public/woocommerce/templates/checkout/form-coupon.php';
 			}
 		}
 		return $path;
@@ -3620,7 +3633,7 @@ class Points_Rewards_For_WooCommerce_Public {
 			return;
 		}
 		// It only shows on cart page.
-		if ( is_cart() ) {
+		if ( is_cart() || has_block( 'woocommerce/cart' ) ) {
 			/*Get the value of the custom points*/
 			$wps_wpr_custom_points_on_cart = $this->wps_wpr_get_general_settings_num( 'wps_wpr_custom_points_on_cart' );
 			if ( 1 === $wps_wpr_custom_points_on_cart ) {
@@ -5342,7 +5355,6 @@ class Points_Rewards_For_WooCommerce_Public {
 				$birthday_points = isset( $settings['wps_wpr_general_birthday_value'] ) ? $settings['wps_wpr_general_birthday_value'] : '';
 
 				update_user_meta( $user_id, '_my_bday', $birthday );
-				update_user_meta( $user_id, 'points_on_birthday_order', $birthday_points );
 
 				$response['result'] = true;
 				$response['msg']    = sprintf(
@@ -5649,7 +5661,7 @@ class Points_Rewards_For_WooCommerce_Public {
 						<!-- Hero Section -->
 						<tr>
 							<td align="center" style="padding:50px 30px 20px;">
-								<img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="Celebration" width="120" style="display:block; margin:0 auto 25px;">
+								<img src="<?php echo esc_url( WPS_RWPR_DIR_URL . 'public/images/wps-wpr-reward-icon.png' ); ?>" alt="Celebration" width="120" style="display:block; margin:0 auto 25px;">
 								<p style="margin:0; font-size:20px; color:#333; font-weight:600;">
 									Hi <span style="color:#43a047;"><?php echo esc_html( $user->display_name ); ?></span>,
 								</p>
@@ -5675,7 +5687,7 @@ class Points_Rewards_For_WooCommerce_Public {
 							<td align="center" style="padding:0 30px 50px;">
 								<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="width:100%; max-width:520px;">
 									<tr>
-										<td align="center" style="background:url('https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/confetti.svg') center/40px repeat #f1fdf3; border-radius:14px; padding:40px; border:2px dashed #a5d6a7; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+										<td align="center" style="background:#f1fdf3; border-radius:14px; padding:40px; border:2px dashed #a5d6a7; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
 											<p style="margin:0; font-size:22px; color:#2e7d32; font-weight:700;"><?php esc_html_e( '🏆 Rewards Unlocked!', 'points-and-rewards-for-woocommerce' ); ?></p>
 											<p style="margin:18px 0; font-size:40px; font-weight:800; color:#2e7d32;">
 												<?php
@@ -5755,4 +5767,3 @@ class Points_Rewards_For_WooCommerce_Public {
 	}
 
 }
-
