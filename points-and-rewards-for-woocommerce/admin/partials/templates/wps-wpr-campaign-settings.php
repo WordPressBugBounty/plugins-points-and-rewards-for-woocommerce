@@ -252,16 +252,8 @@ $wps_wpr_social_share_url             = wps_wpr_get_campaign_settings( 'wps_wpr_
 $wps_wpr_social_share_points          = wps_wpr_get_campaign_settings( 'wps_wpr_social_share_points', 'array' );
 $wps_wpr_social_share_campaign_label  = wps_wpr_get_campaign_settings( 'wps_wpr_social_share_campaign_label', 'array' );
 $upgrade_link                            = '<a href="https://wpswings.com/product/points-and-rewards-for-woocommerce-plugin/?utm_source=wpswings-par-pro&utm_medium=par-org-backend&utm_campaign=go-pro" target="_blank">Click here</a>';
-$message                                 = sprintf( /* translators: %s: sms msg */ esc_html__( 'Unlock this premium feature by upgrading to the Pro plugin. %s to get started!', 'points-and-rewards-for-woocommerce' ), $upgrade_link );
 
-// display only one quiz when pro is not activated.
-if ( wps_wpr_is_par_pro_plugin_active() ) {
-	// Keep all quiz questions if pro is active.
-	$wps_wpr_quiz_question = $wps_wpr_quiz_question;
-} else {
-	// Keep only the first question if not pro.
-	$wps_wpr_quiz_question = array_slice( $wps_wpr_quiz_question, 0, 1 );
-}
+
 ?>
 
 <div class="wps_wpr_user_badges_main_wrappers">
@@ -316,7 +308,7 @@ if ( wps_wpr_is_par_pro_plugin_active() ) {
 					<label for="wps_wpr_enable_birthday_campaign" class="wps_wpr_general_label"><?php esc_html_e( 'Birthday Points', 'points-and-rewards-for-woocommerce' ); ?></label>
 					<div class="wps_wpr_enable_user_badges_setting_wrapper wps_wpr_general_content">
 						<input type="checkbox" name="wps_wpr_enable_birthday_campaign" class="wps_wpr_enable_birthday_campaign" value="yes" <?php checked( $wps_wpr_enable_birthday_campaign, 'yes' ); ?>>
-						<span class="wps_wpr_enable_user_badges_notices wps_wpr_label_notice"><?php echo wp_kses_post( $message ); ?></span>
+						<span class="wps_wpr_enable_user_badges_notices wps_wpr_label_notice"><?php esc_html_e( 'Enable this setting to show birthday points option.', 'points-and-rewards-for-woocommerce' ); ?></span>
 					</div>
 				</article>
 				<?php do_action( 'wps_wpr_add_campaign_general_section', $wps_wpr_campaign_settings ); ?>

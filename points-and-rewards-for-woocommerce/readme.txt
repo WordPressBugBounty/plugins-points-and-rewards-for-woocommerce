@@ -5,8 +5,8 @@ Tags: points and rewards, loyalty, referral points, reward points, gamification
 Requires at least: 6.7.0
 Tested up to: 6.9.4
 WC requires at least: 6.5.0
-WC tested up to: 10.6.2
-Stable tag: 2.9.8
+WC tested up to: 10.7.0
+Stable tag: 2.10.0
 Requires PHP: 7.4
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -189,100 +189,85 @@ Automatic updates should work like a charm; as always though, ensure you backup 
 
 == External Services ==
 
-**WP Swings Support Service**
-Used to allow users to submit queries/support requests.
+**Klaviyo (Email Marketing & Data Sync)**  
+Used to sync customer loyalty data for marketing automation.
 
-Data sent: Name, Email and Message (user input)
+Data sent: Customer email address and loyalty points data  
+When: When admin enables integration and customer data is updated  
+Endpoint: https://a.klaviyo.com/api/identify  
+Terms: https://www.klaviyo.com/legal/terms-of-service  
+Privacy: https://www.klaviyo.com/legal/privacy-policy  
 
-When:
-When the user submits a support query from the plugin dashboard
+**WP Swings Support Service**  
+Used to submit support requests.
 
-Service endpoint:
-https://wpswings.com/submit-query/
-Terms of Service:
-https://wpswings.com/terms-and-conditions/
-Privacy Policy:
-https://wpswings.com/privacy-policy/
+Data sent: Name, email, and message (user input)  
+When: When user submits a support query 
+Endpoint: https://wpswings.com/submit-query/  
+Terms: https://wpswings.com/terms-and-conditions/  
+Privacy: https://wpswings.com/privacy-policy/  
 
-**HubSpot Forms**
-Used for onboarding and deactivation feedback submission.
+**HubSpot Forms**  
+Used for onboarding and feedback collection.
 
-Data sent: Name, email, site URL, and feedback when forms are submitted.
+Data sent: Name, email, website URL, and feedback  
+When: When forms are submitted
+Endpoint: https://api.hsforms.com/  
+Terms: https://legal.hubspot.com/terms-of-service  
+Privacy: https://legal.hubspot.com/privacy-policy  
 
-Endpoint:
-https://api.hsforms.com/
+**Twilio / WhatsApp / Meta Setup Links**  
+Used for configuring messaging services.
 
-Terms: https://legal.hubspot.com/terms-of-service
-Privacy: https://legal.hubspot.com/privacy-policy
+Data sent: The plugin does not directly send data  
+When: Admin uses external setup links  
+Endpoints: https://console.twilio.com/, https://business.facebook.com/  
+Terms: https://www.twilio.com/legal/tos, https://www.facebook.com/terms.php  
+Privacy: https://www.twilio.com/legal/privacy, https://www.facebook.com/privacy/policy  
 
-**Twilio Console (Admin Setup)**
-Used to guide admins in configuring SMS/WhatsApp services and purchasing numbers.
+**YouTube (Tutorials)**  
+Used to display help videos.
 
-Data sent: No data is transmitted by the plugin (setup links only).
+Data sent: IP address and device data (by YouTube)  
+When: When videos are loaded or played  
+Terms: https://www.youtube.com/t/terms  
+Privacy: https://policies.google.com/privacy 
 
-Endpoints:
-https://console.twilio.com/
-https://console.twilio.com/us1/develop/phone-numbers/manage/search
+**WP Swings Client Notification Service**
+Used to fetch plugin update notifications displayed in the admin panel.
 
-Terms: https://www.twilio.com/legal/tos
-Privacy: https://www.twilio.com/legal/privacy
-
-**Meta / WhatsApp Business Console**
-Used to guide admins in configuring WhatsApp Business integration.
-
-Data sent: No data is transmitted by the plugin (setup links only).
-
-Endpoints:
-https://business.facebook.com/
-https://developers.facebook.com/
-
-Terms: https://www.facebook.com/terms.php
-Privacy: https://www.facebook.com/privacy/policy
-
-**YouTube (Documentation & Tutorials)**
-Used to display documentation and walkthrough videos.
-
-Data sent: IP address and device data when videos are loaded or played.
-
-Endpoints:
-https://www.youtube.com/watch?v=DQ2iN9GHVK8
-https://www.youtube.com/watch?v=9BFowjkTU2Q
-
-Terms: https://www.youtube.com/t/terms
-Privacy: https://policies.google.com/privacy
-
-**WPSwings Documentation**
-Used to provide help articles and guides within the plugin UI.
-
-Data sent: No personal data is transmitted by the plugin.
-
-Endpoint:
-https://docs.wpswings.com/user-badges-and-levels/
-
+Data sent: Plugin slug and version number
+When: When the admin visits the plugin dashboard 
+Endpoint: https://demo.wpswings.com/client-notification/points-and-rewards-for-woocommerce/wps-client-notify.php
 Terms: https://wpswings.com/terms-and-conditions/
 Privacy: https://wpswings.com/privacy-policy/
 
-**WordPress.org Plugin Links (Companion Plugins)**
-Used to suggest compatible plugins and integrations.
+**Facebook Graph API (WhatsApp Business)**
+Used to send WhatsApp messages to customers via the WhatsApp Business API.
 
-Data sent: No personal data is transmitted by the plugin.
+Data sent: Customer phone number and points-related message 
+When: When points are awarded and WhatsApp notification is enabled 
+Endpoint: https://graph.facebook.com/v21.0/{PHONE_NUMBER_ID}/messages
+Terms: https://www.facebook.com/terms.php
+Privacy: https://www.facebook.com/privacy/policy
 
-Endpoints:
-https://wordpress.org/plugins/wt-smart-coupons-for-woocommerce/
-https://wordpress.org/plugins/dc-woocommerce-multi-vendor/
-https://wordpress.org/plugins/membership-for-woocommerce/
-https://wordpress.org/plugins/wallet-system-for-woocommerce/
-https://wordpress.org/plugins/woocommerce-currency-switcher/
-https://wordpress.org/plugins/woocommerce-paypal-payments/
-https://wordpress.org/plugins/elementor/
-https://wordpress.org/plugins/subscriptions-for-woocommerce/
-https://wordpress.org/plugins/dokan-lite/
-https://wordpress.org/plugins/woo-gift-cards-lite/
+**Facebook SDK (Social Sharing)**
+Used to render Facebook share buttons for referral sharing.
 
-**Purpose notes:**
-- HubSpot link is the only outbound API endpoint used for data submission.
-- Twilio and WhatsApp/Facebook links are provided to admins for configuring messaging/WhatsApp; no direct API calls to those hosts are present in this plugin.
-- YouTube links are tutorials; WordPress.org links point to compatible companion plugins.
+Data sent: IP address and device data (by Facebook) 
+When: When the points/referral page is loaded 
+Endpoint: https://connect.facebook.net/en_GB/sdk.js
+Terms: https://www.facebook.com/terms.php
+Privacy: https://www.facebook.com/privacy/policy
+
+**Pinterest (Social Sharing)**
+Used to open Pinterest pin creation for referral sharing.
+
+Data sent: The plugin does not directly send data; user is redirected to Pinterest 
+When: When user clicks the Pinterest share button 
+Endpoint: https://pinterest.com/pin/create/link/
+Terms: https://policy.pinterest.com/en/terms-of-service
+Privacy: https://policy.pinterest.com/en/privacy-policy
 
 == Screenshots ==
 1. **General Settings** - Basic settings which are required to run the plugin
@@ -395,7 +380,13 @@ Please visit [**WP Swings PAR Knowledge Base**](https://support.wpswings.com/wor
 
 == Changelog ==
 
-= 2.9.8 - Released on 06 April 2026 =
+= 2.10.0 - Released on 07 May 2026 =
+* New : Compatibility with latest WC ( 10.7.0 ) and WP ( 6.9.4 )
+* New : UI/UX dashboard layout changes
+* New : Points tab template
+* Fix : Performance Optimization
+
+= 2.9.8 - Released on 08 April 2026 =
 * Fix : Deprecated function issues and escaping issues
 
 = 2.9.8 - Released on 02 April 2026 =
@@ -762,5 +753,8 @@ Please visit [**WP Swings PAR Knowledge Base**](https://support.wpswings.com/wor
 
 == Upgrade Notice ==
 
-= 2.9.8 - Released on 06 April 2026 =
-* Fix : Deprecated function issues and escaping issues
+= 2.10.0 - Released on 07 May 2026 =
+* New : Compatibility with latest WC ( 10.7.0 ) and WP ( 6.9.4 )
+* New : UI/UX dashboard layout changes
+* New : Points tab template
+* Fix : Performance Optimization
